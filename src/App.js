@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
+import Routes from './Routes';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload (Book Gamification)
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = props => {
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
-export default App;
+  useEffect(() => {
+    onLoad();
+  }, []);
+
+  async function onLoad() {
+    try {
+      await Auth.currentSession();
+      userHasAuthenticated(true);
+    } catch (e) {
+      if (e !== 'No current user') {
+        alert(e);
+      }
+    }
+
+    setIsAuthenticating(false);
+  }
+
+  async function handleLogout() {
+    await Auth.signOut();
+
+    userHasAuthenticated(false);
+
+    props.history.push('/login');
+  }
+
+  return (
+    !isAuthenticating && (
+      <div className="App">
+        <>
+          <Link to="/">Homepage</Link>
+          <hr />
+          <Link to="/signup">Signup</Link>
+          <hr />
+          <Link to="/login">Login</Link>
+          <hr />
+
+          <button onClick={handleLogout}>Logout</button>
+          <hr />
+        </>
+        <Routes appProps={{ isAuthenticated, userHasAuthenticated }} />
+      </div>
+    )
+  );
+};
+
+export default withRouter(App);

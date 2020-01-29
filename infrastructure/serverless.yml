@@ -124,8 +124,27 @@ resources:
                   - - 'arn:aws:s3:::'
                     - Ref: 'BookGamificationBucket'
                     - '/*'
+    BookGamificationCognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: BookGamification
+    BookGamificationCognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: BookGamificationWebApp
+        GenerateSecret: false
+        UserPoolId:
+          Ref: 'BookGamificationCognitoUserPool'
   Outputs:
     BookGamificationBucketURL:
       Description: 'Book Gamification Bucket Website URL'
       Value:
         'Fn::GetAtt': [BookGamificationBucket, WebsiteURL]
+    BookGamificationCognitoUserPoolId:
+      Description: Book Gamification Cognito User Pool ID"
+      Value:
+        Ref: 'BookGamificationCognitoUserPool'
+    BookGamificationCognitoUserPoolClientId:
+      Description: Book Gamification Cognito User Pool Client ID"
+      Value:
+        Ref: 'BookGamificationCognitoUserPoolClient'

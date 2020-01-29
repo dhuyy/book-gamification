@@ -1,0 +1,13 @@
+.Signup .lander {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.Signup .lander h1 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+}
+
+.Signup .lander p {
+  color: #999;
+}

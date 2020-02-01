@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { Auth } from 'aws-amplify';
 import LoaderButton from '../components/LoaderButton';
 import { useFormFields } from '../libs/hooksLib';
 import './Login.css';
 
-export default function Login(props) {
+const Login = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [fields, handleFieldChange] = useFormFields({
     email: '',
@@ -33,22 +34,29 @@ export default function Login(props) {
   return (
     <div className="Login">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="text"
-          value={fields.email}
-          onChange={handleFieldChange}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={fields.password}
-          onChange={handleFieldChange}
-        />
+        <FormGroup controlId="email" bsSize="large">
+          <ControlLabel>Email</ControlLabel>
+          <FormControl
+            id="email"
+            type="email"
+            autoFocus
+            value={fields.email}
+            onChange={handleFieldChange}
+          />
+        </FormGroup>
+        <FormGroup controlId="password" bsSize="large">
+          <ControlLabel>Password</ControlLabel>
+          <FormControl
+            id="password"
+            type="password"
+            value={fields.password}
+            onChange={handleFieldChange}
+          />
+        </FormGroup>
         <LoaderButton
           type="submit"
+          block
+          bsSize="large"
           isLoading={isLoading}
           disabled={!validateForm()}
         >
@@ -57,4 +65,6 @@ export default function Login(props) {
       </form>
     </div>
   );
-}
+};
+
+export default Login;

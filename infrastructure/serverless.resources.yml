@@ -1,0 +1,57 @@
+Description: Book Gamification Infrastructure CloudFormation
+Resources:
+  BookGamificationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.buckets.website}
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  BookGamificationBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: 'BookGamificationBucket'
+      PolicyDocument:
+        Statement:
+          - Effect: 'Allow'
+            Principal: '*'
+            Action:
+              - 's3:GetObject'
+            Resource:
+              Fn::Join:
+                - ''
+                - - 'arn:aws:s3:::'
+                  - Ref: 'BookGamificationBucket'
+                  - '/*'
+
+  BookGamificationCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: BookGamification
+      UsernameAttributes:
+        - 'email'
+
+  BookGamificationCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: BookGamificationWebApp
+      GenerateSecret: false
+      UserPoolId:
+        Ref: 'BookGamificationCognitoUserPool'
+
+Outputs:
+  BookGamificationBucketURL:
+    Description: 'Book Gamification Bucket Website URL'
+    Value:
+      'Fn::GetAtt': [BookGamificationBucket, WebsiteURL]
+
+  BookGamificationCognitoUserPoolId:
+    Description: Book Gamification Cognito User Pool ID"
+    Value:
+      Ref: 'BookGamificationCognitoUserPool'
+
+  BookGamificationCognitoUserPoolClientId:
+    Description: Book Gamification Cognito User Pool Client ID"
+    Value:
+      Ref: 'BookGamificationCognitoUserPoolClient'

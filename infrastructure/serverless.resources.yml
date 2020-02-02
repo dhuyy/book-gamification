@@ -29,8 +29,10 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: BookGamification
+      AutoVerifiedAttributes:
+        - email
       UsernameAttributes:
-        - 'email'
+        - email
 
   BookGamificationCognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient

@@ -12,24 +12,28 @@ const Login = props => {
     password: ''
   });
 
-  function validateForm() {
-    return fields.email.length > 0 && fields.password.length > 0;
-  }
+  const validateForm = () =>
+    fields.email.length > 0 && fields.password.length > 0;
 
-  async function handleSubmit(event) {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     setIsLoading(true);
 
     try {
       await Auth.signIn(fields.email, fields.password);
+
       props.userHasAuthenticated(true);
       props.history.push('/');
     } catch (e) {
       alert(e.message);
       setIsLoading(false);
+
+      if ((e.code = 'UserNotConfirmedException')) {
+        props.history.push(`/signup?p=confirm&email=${fields.email}`);
+      }
     }
-  }
+  };
 
   return (
     <div className="Login">

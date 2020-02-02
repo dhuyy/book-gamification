@@ -14,7 +14,7 @@ const App = props => {
     onLoad();
   }, []);
 
-  async function onLoad() {
+  const onLoad = async () => {
     try {
       await Auth.currentSession();
       userHasAuthenticated(true);
@@ -25,15 +25,15 @@ const App = props => {
     }
 
     setIsAuthenticating(false);
-  }
+  };
 
-  async function handleLogout() {
+  const handleLogout = async () => {
     await Auth.signOut();
 
     userHasAuthenticated(false);
 
     props.history.push('/login');
-  }
+  };
 
   return (
     !isAuthenticating && (
